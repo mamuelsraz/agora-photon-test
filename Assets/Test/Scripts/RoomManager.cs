@@ -35,34 +35,34 @@ namespace Photon.Pun
                     (object)name
                 };
 
-            GameObject instance = PhotonNetwork.Instantiate("Player", new Vector3(0f, 0f, 0f), Quaternion.identity, 0, data: dataName);
-            call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
-        }
+                GameObject instance = PhotonNetwork.Instantiate("Player", new Vector3(0f, 0f, 0f), Quaternion.identity, 0, data: dataName);
+                call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
+            }
             else
             {
 
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
-}
+        }
 
-void Update()
-{
-    // "back" button of phone equals "Escape". quit app if that's pressed
-    if (Input.GetKeyDown(KeyCode.Escape))
-    {
-        Application.Quit();
-    }
-}
+        void Update()
+        {
+            // "back" button of phone equals "Escape". quit app if that's pressed
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        }
 
-public override void OnLeftRoom()
-{
-    SceneManager.LoadScene("Lobby");
-}
+        public override void OnLeftRoom()
+        {
+            SceneManager.LoadScene("Lobby");
+        }
 
-public void LeaveRoom()
-{
-    PhotonNetwork.LeaveRoom();
-    call.LeaveCall();
-}
+        public void LeaveRoom()
+        {
+            PhotonNetwork.LeaveRoom();
+            call.LeaveCall();
+        }
     }
 }
