@@ -75,10 +75,6 @@ public class CallManager : MonoBehaviour
 
         // find a game object to render video stream from 'uid'
         GameObject go = GameObject.Find(uid.ToString());
-        /*if (!ReferenceEquals(go, null))
-        {
-            return; // reuse
-        }*/
 
         GameObject obj = go.transform.Find("Quad").gameObject;
         Debug.Log(uid);
@@ -112,7 +108,7 @@ public class CallManager : MonoBehaviour
     {
         if (!ReferenceEquals(app, null))
         {
-            app.unloadEngine();
+            LeaveCall();
         }
     }
 

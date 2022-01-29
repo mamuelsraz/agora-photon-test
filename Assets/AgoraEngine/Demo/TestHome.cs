@@ -25,7 +25,7 @@ public class TestHome : MonoBehaviour
     // PLEASE KEEP THIS App ID IN SAFE PLACE
     // Get your own App ID at https://dashboard.agora.io/
     [SerializeField]
-    private string AppID = "your_appid";
+    private string AppID = "5376c522393140e4b6ffa89d37612ce3";
 
     void Awake()
     {

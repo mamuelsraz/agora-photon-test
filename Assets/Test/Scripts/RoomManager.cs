@@ -40,7 +40,6 @@ namespace Photon.Pun
             }
             else
             {
-
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
         }
@@ -50,7 +49,7 @@ namespace Photon.Pun
             // "back" button of phone equals "Escape". quit app if that's pressed
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Application.Quit();
+                LeaveRoom();
             }
         }
 
