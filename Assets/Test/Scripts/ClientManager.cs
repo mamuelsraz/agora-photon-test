@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Realtime;
+//using UnityEngine.InputSystem;
 
 namespace Photon.Pun
 {
@@ -57,6 +58,7 @@ namespace Photon.Pun
         public void RotateCam()
         {
             Vector2 mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseSensitivity * Time.deltaTime;
+            //Vector2 mouseInput = new Vector2(Mouse.current.delta.x.ReadValue(), Mouse.current.delta.y.ReadValue()) * mouseSensitivity * Time.deltaTime;
 
             yRotation -= mouseInput.y;
             yRotation = Mathf.Clamp(yRotation, -90f, 90f);
