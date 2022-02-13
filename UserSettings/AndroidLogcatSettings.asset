@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "1WMHH835YE0494",
     "m_SelectedPackage": {
         "deviceId": "1WMHH835YE0494",
-        "name": "com.DefaultCompany.agora",
-        "processId": 3997,
+        "name": "com.company.agora",
+        "processId": 20793,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -11,55 +11,49 @@
         {
             "deviceId": "1WMHH835YE0494",
             "name": "com.oculus.shellenv",
-            "processId": 2013,
+            "processId": 1893,
             "exited": false
         },
         {
             "deviceId": "1WMHH835YE0494",
             "name": "com.DefaultCompany.agora",
-            "processId": 8147,
+            "processId": 11817,
             "exited": true
         },
         {
             "deviceId": "1WMHH835YE0494",
             "name": "com.DefaultCompany.agora",
-            "processId": 9355,
+            "processId": 14118,
             "exited": true
         },
         {
             "deviceId": "1WMHH835YE0494",
             "name": "com.DefaultCompany.agora",
-            "processId": 9743,
+            "processId": 15362,
             "exited": true
         },
         {
             "deviceId": "1WMHH835YE0494",
-            "name": "com.DefaultCompany.agora",
-            "processId": 10194,
+            "name": "com.company.agora",
+            "processId": 18533,
             "exited": true
         },
         {
             "deviceId": "1WMHH835YE0494",
-            "name": "com.DefaultCompany.agora",
-            "processId": 10881,
+            "name": "com.company.agora",
+            "processId": 19885,
+            "exited": true
+        },
+        {
+            "deviceId": "1WMHH835YE0494",
+            "name": "com.company.agora",
+            "processId": 20495,
             "exited": false
         },
         {
             "deviceId": "1WMHH835YE0494",
-            "name": "com.DefaultCompany.agora",
-            "processId": 11125,
-            "exited": false
-        },
-        {
-            "deviceId": "1WMHH835YE0494",
-            "name": "com.DefaultCompany.agora",
-            "processId": 11653,
-            "exited": false
-        },
-        {
-            "deviceId": "1WMHH835YE0494",
-            "name": "com.DefaultCompany.agora",
-            "processId": 3997,
+            "name": "com.company.agora",
+            "processId": 20793,
             "exited": false
         }
     ],

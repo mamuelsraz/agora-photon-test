@@ -21,14 +21,20 @@ public class CallManager : MonoBehaviour
     void Awake()
     {
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
-		permissionList.Add(Permission.Microphone);         
-		permissionList.Add(Permission.Camera);               
+		permissionList.Add(Permission.Microphone);
 #endif
+    }
+
+    private void Start()
+    {
+        CheckPermissions();
     }
 
     void Update()
     {
+#if (UNITY_2018_3_OR_NEWER)
         CheckPermissions();
+#endif
     }
 
     /// <summary>
@@ -36,7 +42,7 @@ public class CallManager : MonoBehaviour
     /// </summary>
     private void CheckPermissions()
     {
-#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
+#if (UNITY_2018_3_OR_NEWER)
         foreach(string permission in permissionList)
         {
             if (!Permission.HasUserAuthorizedPermission(permission))

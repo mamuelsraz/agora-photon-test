@@ -11,8 +11,10 @@ namespace Photon.Pun
 
         private GameObject instance;
 
-        [SerializeField]
-        private GameObject playerPrefab;
+        public bool isVR;
+
+        public string PlayerPrefabName;
+        public string PlayerVRPrefabName;
 
         private void Start()
         {
@@ -25,6 +27,9 @@ namespace Photon.Pun
                 return;
             }
 
+            if(isVR) GameObject.Find("Main Camera").SetActive(false);
+            if(isVR) GameObject.Find("EventSystem").SetActive(false);
+
             if (ClientManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
@@ -35,7 +40,8 @@ namespace Photon.Pun
                     (object)name
                 };
 
-                GameObject instance = PhotonNetwork.Instantiate("Player", new Vector3(0f, 0f, 0f), Quaternion.identity, 0, data: dataName);
+                GameObject instance = PhotonNetwork.Instantiate(isVR ? PlayerVRPrefabName : PlayerPrefabName, new Vector3(0f, 0f, 0f), Quaternion.identity, 0, data: dataName);
+
                 call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
             }
             else

@@ -5,7 +5,9 @@ namespace Photon.Pun
 {
     public class JoinManager : MonoBehaviourPunCallbacks
     {
+        public string RoomScene = "Room";
         bool isConnecting = false;
+
         private void Awake()
         {
             isConnecting = false;
@@ -53,7 +55,7 @@ namespace Photon.Pun
 
                 // #Critical
                 // Load the Room Level. 
-                PhotonNetwork.LoadLevel("Room");
+                PhotonNetwork.LoadLevel(RoomScene);
             }
         }
     }
