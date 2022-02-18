@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Test/VRRoom.unity
     guid: be09598cb8d2d444a83c8672f6464ba9
+  - enabled: 0
+    path: Assets/AgoraEngine/Demo/SceneHome.unity
+    guid: 11e44933caff747879b06a78a609ddfe
+  - enabled: 0
+    path: Assets/AgoraEngine/Demo/SceneHelloVideo.unity
+    guid: 38239e0a3e78848d8a1e3b083920e199
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: d9973e2ebfaf2d640bd9ab60e6f0af2e, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: d80392660a04930489323438340a1825, type: 2}

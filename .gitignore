@@ -36,7 +36,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-Assets/AgoraEngine/Plugins/Android
-Assets/AgoraEngine/Plugins/iOS
-Assets/AgoraEngine/Plugins/macOS
+Assets/Plugins/Android
+Assets/Plugins/iOS
+Assets/Plugins/macOS
 

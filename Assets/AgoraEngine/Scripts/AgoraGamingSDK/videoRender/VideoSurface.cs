@@ -186,7 +186,8 @@ namespace agora_gaming_rtc
                             */
                             defWidth = width;
                             defHeight = height;
-                            nativeTexture.Reinitialize(defWidth, defHeight);
+                            //nativeTexture.Reinitialize(defWidth, defHeight);
+                            nativeTexture.Resize(defWidth, defHeight);
                             nativeTexture.LoadRawTextureData(data, (int)width * (int)height * 4);
                             nativeTexture.Apply();
                         }
