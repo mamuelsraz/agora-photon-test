@@ -9,12 +9,7 @@ namespace Photon.Pun
         static public RoomManager Instance;
         public CallManager call;
 
-        private GameObject instance;
-
-        public bool isVR;
-
         public string PlayerPrefabName;
-        public string PlayerVRPrefabName;
 
         private void Start()
         {
@@ -27,22 +22,19 @@ namespace Photon.Pun
                 return;
             }
 
-            if(isVR) GameObject.Find("Main Camera").SetActive(false);
-            if(isVR) GameObject.Find("EventSystem").SetActive(false);
-
-            if (ClientManager.LocalPlayerInstance == null)
+            if (PlayerManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                string name = PhotonNetwork.LocalPlayer.ActorNumber.ToString();
+                int id = PhotonNetwork.LocalPlayer.ActorNumber;
                 object[] dataName = new object[]{
-                    (object)name
+                    (object)id
                 };
 
-                GameObject instance = PhotonNetwork.Instantiate(isVR ? PlayerVRPrefabName : PlayerPrefabName, new Vector3(0f, 0f, 0f), Quaternion.identity, 0, data: dataName);
+                GameObject instance = PhotonNetwork.Instantiate(PlayerPrefabName, Vector3.zero, Quaternion.identity, 0, data: dataName);
 
-                call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
+                //call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
             }
             else
             {

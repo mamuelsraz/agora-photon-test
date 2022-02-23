@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
 using agora_gaming_rtc;
 using agora_utilities;
 using UnityEngine.UI;
@@ -12,7 +12,7 @@ public class CallManager : MonoBehaviour
     //NEKOUKAT!!
     public string AppID;
 
-    static VideoManager app = null;
+    static CallEngine app = null;
 
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
@@ -32,7 +32,7 @@ public class CallManager : MonoBehaviour
 
     void Update()
     {
-#if (UNITY_2018_3_OR_NEWER)
+#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
         CheckPermissions();
 #endif
     }
@@ -42,7 +42,7 @@ public class CallManager : MonoBehaviour
     /// </summary>
     private void CheckPermissions()
     {
-#if (UNITY_2018_3_OR_NEWER)
+#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
         foreach(string permission in permissionList)
         {
             if (!Permission.HasUserAuthorizedPermission(permission))
@@ -58,7 +58,7 @@ public class CallManager : MonoBehaviour
         // create app if nonexistent
         if (ReferenceEquals(app, null))
         {
-            app = new VideoManager(); // create app
+            app = new CallEngine(); // create app
             app.loadEngine(AppID); // load engine
         }
 
@@ -81,13 +81,12 @@ public class CallManager : MonoBehaviour
         // this is called in main thread
 
         // find a game object to render video stream from 'uid'
-        GameObject go = GameObject.Find(uid.ToString());
-
-        GameObject obj = go.transform.Find("Quad").gameObject;
+        GameObject player = PlayerManager.PlayerList[(int)uid].gameObject;
+        GameObject quad = player.transform.Find("Quad").gameObject;
         Debug.Log(uid);
-        obj.name = uid.ToString();
-        //obj.AddComponent<RawImage>();
-        VideoSurface videoSurface = obj.AddComponent<VideoSurface>();
+        quad.name = uid.ToString();
+
+        VideoSurface videoSurface = quad.AddComponent<VideoSurface>();
 
         if (!ReferenceEquals(videoSurface, null))
         {

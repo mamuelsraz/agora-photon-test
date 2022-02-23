@@ -5,7 +5,7 @@ using agora_gaming_rtc;
 using agora_utilities;
 using UnityEngine.UI;
 
-public class VideoManager
+public class CallEngine
 {
     // instance of agora engine
     public IRtcEngine mRtcEngine;

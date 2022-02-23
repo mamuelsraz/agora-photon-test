@@ -4,32 +4,21 @@ using Photon.Realtime;
 
 namespace Photon.Pun
 {
-    public class ClientManager : MonoBehaviourPunCallbacks, IPunObservable
+    public class PlayerController : MonoBehaviourPunCallbacks
     {
-        public static GameObject LocalPlayerInstance;
         public CharacterController controller;
         public float speed;
 
-        Transform cam;
+        public Transform cam;
         public Transform camOffset;
         public float mouseSensitivity;
         float yRotation = 0f;
 
-        private void Awake()
-        {
-            if (photonView.IsMine)
-            {
-                LocalPlayerInstance = gameObject;
-            }
-        }
-
         private void Start()
         {
-            if (photonView.IsMine)
+            if (!photonView.IsMine)
             {
-                cam = Camera.main.transform;
-                cam.parent = camOffset;
-                cam.localPosition = Vector3.zero;
+                cam.gameObject.SetActive(false);
             }
         }
 
@@ -66,21 +55,5 @@ namespace Photon.Pun
             cam.localRotation = Quaternion.Euler(yRotation, 0, 0);
             transform.Rotate(Vector3.up * mouseInput.x);
         }
-
-        #region IPunObservable implementation
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                // We own this player: send the others our data
-            }
-            else
-            {
-                // Network player, receive data
-            }
-        }
-
-        #endregion
     }
 }
