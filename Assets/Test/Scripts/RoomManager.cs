@@ -12,6 +12,7 @@ namespace Photon.Pun
         static public RoomManager Instance;
         static public GameState gameState;
         public CallManager call;
+        public float sendGameStateInterval;
 
         public string PlayerPrefabName;
 
@@ -40,7 +41,7 @@ namespace Photon.Pun
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
 
-            if (photonView.IsMine && PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient)
             {
                 gameState = new GameState();
                 gameState.bannerMessage = "========THIS IS THIS ROOM'S BANNER========";
@@ -55,27 +56,68 @@ namespace Photon.Pun
             {
                 LeaveRoom();
             }
+
+            if (Input.GetKeyDown(KeyCode.Space)) InteractDoor();
+        }
+
+        void SendStateUpdate()
+        {
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.PlayerListOthers.Length > 0)
+            {
+                photonView.RPC("StateUpdated", RpcTarget.Others, gameState);
+            }
         }
 
         [PunRPC]
-        public void GetGameState(GameState state)
+        void StateUpdated(GameState state)
         {
             gameState = state;
-            Debug.LogError(state.bannerMessage);
-            Debug.LogError(state.startTime);
+        }
+
+        void RequestStateChange(GameState state)
+        {
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                gameState = state;
+                SendStateUpdate();
+
+                return;
+            }
+
+            photonView.RPC("RequestedChangeState", RpcTarget.MasterClient, state);
         }
 
         [PunRPC]
-        public void ChangedMaster(GameState state)
+        void RequestedChangeState(GameState state)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                gameState = state;
+                SendStateUpdate();
+            }
+        }
+
+        void ChangeMaster()
+        {
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.PlayerListOthers.Length > 0)
+            {
+                Player p = PhotonNetwork.PlayerListOthers[0];
+                photonView.RPC("NewMaster", p, gameState);
+            }
+
+        }
+
+        [PunRPC]
+        void NewMaster(GameState state)
         {
             PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
             gameState = state;
             state.startTime = DateTime.Now;
-            Debug.LogError("I am the new master!");
-            Debug.LogError(state.bannerMessage);
-            Debug.LogError(state.startTime);
-            photonView.RPC("GetGameState", RpcTarget.Others, state);
+            SendStateUpdate();
         }
+
+        //garbage>>
 
         public override void OnLeftRoom()
         {
@@ -84,16 +126,12 @@ namespace Photon.Pun
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            photonView.RPC("GetGameState", newPlayer, gameState);
+            SendStateUpdate();
         }
 
-        public void LeaveRoom()
+        void LeaveRoom()
         {
-            if (PhotonNetwork.IsMasterClient && PhotonNetwork.PlayerListOthers.Length > 0)
-            {
-                Player p = PhotonNetwork.PlayerListOthers[0];
-                photonView.RPC("ChangedMaster", p, gameState);
-            }
+            ChangeMaster();
             PhotonNetwork.LeaveRoom();
             call.LeaveCall();
         }
@@ -112,13 +150,29 @@ namespace Photon.Pun
 
             //call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
         }
+
+        void InteractDoor()
+        {
+            GameState state = new GameState(gameState.startTime, !gameState.doorOpen, gameState.bannerMessage);
+            RequestStateChange(state);
+        }
     }
 }
 
 public class GameState
 {
     public DateTime startTime;
+    public bool doorOpen;
     public string bannerMessage;
+
+    public GameState() { }
+
+    public GameState(DateTime startTime, bool doorOpen, string bannerMessage)
+    {
+        this.startTime = startTime;
+        this.doorOpen = doorOpen;
+        this.bannerMessage = bannerMessage;
+    }
 
     public static byte[] SerializeGameState(object customobject)
     {
@@ -126,11 +180,10 @@ public class GameState
 
         short strLenght = (short)System.Text.Encoding.UTF8.GetBytes(gs.bannerMessage).Length;
 
-        MemoryStream ms = new MemoryStream(8 + 2 + strLenght); //datetime + string lenght + string
-
-        Debug.Log(strLenght);
+        MemoryStream ms = new MemoryStream(8 + 1 + 2 + strLenght); //datetime + bool +string lenght + string
 
         ms.Write(BitConverter.GetBytes(gs.startTime.Ticks), 0, 8);
+        ms.Write(BitConverter.GetBytes(gs.doorOpen), 0, 1);
         ms.Write(BitConverter.GetBytes(strLenght), 0, 2);
         ms.Write(System.Text.Encoding.UTF8.GetBytes(gs.bannerMessage), 0, strLenght);
 
@@ -140,11 +193,11 @@ public class GameState
     public static object DeserializeGameState(byte[] bytes)
     {
         GameState gs = new GameState();
+
         gs.startTime = new DateTime(BitConverter.ToInt64(bytes, 0));
-
-        int strLenght = (int)BitConverter.ToInt16(bytes, 8);
-
-        gs.bannerMessage = System.Text.Encoding.UTF8.GetString(bytes, 4 + 4 + 2, strLenght);
+        gs.doorOpen = BitConverter.ToBoolean(bytes, 8);
+        int strLenght = (int)BitConverter.ToInt16(bytes, 8 + 1);
+        gs.bannerMessage = System.Text.Encoding.UTF8.GetString(bytes, 8 + 1 + 2, strLenght);
 
         return gs;
     }

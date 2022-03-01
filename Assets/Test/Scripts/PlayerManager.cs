@@ -35,8 +35,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCall
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && photonView.IsMine)
-            photonView.RPC("SendThroughNetwork", RpcTarget.Others, new SendPlayer(callID, playerType, "hello"));
+
     }
 
     void SpawnPlayer()
@@ -96,8 +95,6 @@ public class SendPlayer
         short strLenght = (short)System.Text.Encoding.UTF8.GetBytes(pl.message).Length;
 
         MemoryStream ms = new MemoryStream(4 + 4 + 2 + strLenght); //ID + PlayerType + string lenght + string
-
-        Debug.Log(strLenght);
 
         ms.Write(BitConverter.GetBytes(pl.ID), 0, 4);
         ms.Write(BitConverter.GetBytes((int)pl.playerType), 0, 4);

@@ -42,6 +42,9 @@ MonoBehaviour:
   - SendThroughNetwork
   - GetGameState
   - ChangedMaster
+  - NewMaster
+  - RequestedChangeState
+  - StateUpdated
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
