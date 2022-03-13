@@ -148,7 +148,7 @@ namespace Photon.Pun
 
             GameObject instance = PhotonNetwork.Instantiate(PlayerPrefabName, Vector3.zero, Quaternion.identity, 0, data: dataName);
 
-            //call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
+            call.JoinCall(PhotonNetwork.CurrentRoom.Name, (uint)PhotonNetwork.LocalPlayer.ActorNumber);
         }
 
         void InteractDoor()

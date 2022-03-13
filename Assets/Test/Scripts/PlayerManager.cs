@@ -33,16 +33,16 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCall
         }
     }
 
-    private void Update()
-    {
-
-    }
-
     void SpawnPlayer()
     {
         string path = PlayerTypeDirectories[playerType];
 
-        playerController = PhotonNetwork.Instantiate(path, Vector3.zero, Quaternion.identity);
+        object[] data = new object[]{
+                    (object)callID
+                };
+        playerController = PhotonNetwork.Instantiate(path, Vector3.zero, Quaternion.identity, data: data);
+
+        Debug.Log($"spawned new player controller with id {callID}");
     }
 
     public void OnPhotonInstantiate(Photon.Pun.PhotonMessageInfo info)
@@ -50,12 +50,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCall
         object[] data = info.photonView.InstantiationData;
         callID = (int)(data[0]);
 
+        PlayerList.Add(callID, this);
+
         if (photonView.IsMine)
         {
             SpawnPlayer();
         }
-
-        PlayerList.Add(callID, this);
     }
 
     private void OnDestroy()
@@ -70,7 +70,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCall
     }
 }
 
-public class SendPlayer 
+public class SendPlayer
 {
     public int ID;
     public PlayerType playerType;

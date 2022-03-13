@@ -9,10 +9,12 @@ using UnityEngine.Android;
 
 public class CallManager : MonoBehaviour
 {
+    public static CallManager instance;
     //NEKOUKAT!!
     public string AppID;
 
     static CallEngine app = null;
+    List<uint> notYetSynced;
 
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
@@ -20,9 +22,14 @@ public class CallManager : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null) instance = this;
+        else Destroy(this);
+
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
 		permissionList.Add(Permission.Microphone);
 #endif
+
+        notYetSynced = new List<uint>();
     }
 
     private void Start()
@@ -80,20 +87,39 @@ public class CallManager : MonoBehaviour
         Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
         // this is called in main thread
 
+        notYetSynced.Add(uid);
+
+        TryDisplayPlayerCam(uid);
+    }
+
+    public void TryDisplayPlayerCam(uint uid)
+    {
         // find a game object to render video stream from 'uid'
-        GameObject player = PlayerManager.PlayerList[(int)uid].gameObject;
-        GameObject quad = player.transform.Find("Quad").gameObject;
-        Debug.Log(uid);
-        quad.name = uid.ToString();
-
-        VideoSurface videoSurface = quad.AddComponent<VideoSurface>();
-
-        if (!ReferenceEquals(videoSurface, null))
+        if (PlayerManager.PlayerList.ContainsKey((int)uid) && PlayerManager.PlayerList[(int)uid].playerController != null && notYetSynced.Contains(uid))
         {
-            // configure videoSurface
-            videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
-            videoSurface.SetForUser(uid);
-            videoSurface.SetEnable(true);
+            GameObject player = PlayerManager.PlayerList[(int)uid].playerController.gameObject;
+            GameObject quad = player.transform.Find("Quad").gameObject;
+            Debug.Log(uid);
+            quad.name = uid.ToString();
+
+            VideoSurface videoSurface = quad.AddComponent<VideoSurface>();
+
+            if (!ReferenceEquals(videoSurface, null))
+            {
+                // configure videoSurface
+                videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
+                videoSurface.SetForUser(uid);
+                videoSurface.SetEnable(true);
+            }
+
+            notYetSynced.Remove(uid);
+        }
+        else
+        {
+            Debug.Log("////////" + PlayerManager.PlayerList.ContainsKey((int)uid));
+            Debug.Log(PlayerManager.PlayerList[(int)uid].playerController != null);
+            Debug.Log(notYetSynced.Contains(uid));
+            Debug.LogWarning("Player was not found (likely not instanciated yet)");
         }
     }
 

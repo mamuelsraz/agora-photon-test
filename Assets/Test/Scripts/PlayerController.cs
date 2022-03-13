@@ -4,7 +4,7 @@ using Photon.Realtime;
 
 namespace Photon.Pun
 {
-    public class PlayerController : MonoBehaviourPunCallbacks
+    public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
     {
         public CharacterController controller;
         public float speed;
@@ -19,6 +19,19 @@ namespace Photon.Pun
             if (!photonView.IsMine)
             {
                 cam.gameObject.SetActive(false);
+            }
+        }
+
+        public void OnPhotonInstantiate(Photon.Pun.PhotonMessageInfo info)
+        {
+            object[] data = info.photonView.InstantiationData;
+            int callID = (int)(data[0]);
+
+            PlayerManager.PlayerList[callID].playerController = gameObject;
+            
+            if (!photonView.IsMine)
+            {
+                CallManager.instance.TryDisplayPlayerCam((uint)callID);
             }
         }
 

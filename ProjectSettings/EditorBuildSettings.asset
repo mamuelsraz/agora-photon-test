@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Test/Room.unity
     guid: b0b8b83293995f441a0d41cec71d0443
   - enabled: 0
-    path: Assets/Test/VRRoom.unity
-    guid: be09598cb8d2d444a83c8672f6464ba9
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/AgoraEngine/Demo/SceneHome.unity
     guid: 11e44933caff747879b06a78a609ddfe
