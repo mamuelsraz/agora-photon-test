@@ -6,15 +6,17 @@ using agora_gaming_rtc;
 using agora_utilities;
 using UnityEngine.UI;
 using UnityEngine.Android;
+using UnityEngine.Events;
 
 public class CallManager : MonoBehaviour
 {
     public static CallManager instance;
+    public static CallEngine app = null;
+
     //NEKOUKAT!!
     public string AppID;
-
-    static CallEngine app = null;
     List<uint> notYetSynced;
+    public SyncEvent OnSynced;
 
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
@@ -97,6 +99,8 @@ public class CallManager : MonoBehaviour
         // find a game object to render video stream from 'uid'
         if (PlayerManager.PlayerList.ContainsKey((int)uid) && PlayerManager.PlayerList[(int)uid].playerController != null && notYetSynced.Contains(uid))
         {
+            OnSynced.Invoke((int)uid);
+
             GameObject player = PlayerManager.PlayerList[(int)uid].playerController.gameObject;
             GameObject quad = player.transform.Find("Quad").gameObject;
             Debug.Log(uid);
@@ -116,9 +120,6 @@ public class CallManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("////////" + PlayerManager.PlayerList.ContainsKey((int)uid));
-            Debug.Log(PlayerManager.PlayerList[(int)uid].playerController != null);
-            Debug.Log(notYetSynced.Contains(uid));
             Debug.LogWarning("Player was not found (likely not instanciated yet)");
         }
     }
@@ -153,4 +154,9 @@ public class CallManager : MonoBehaviour
             app = null; // delete app
         }
     }
+}
+
+[System.Serializable]
+public class SyncEvent : UnityEvent<int>
+{
 }

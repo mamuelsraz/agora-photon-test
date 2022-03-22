@@ -1,41 +1,52 @@
 using UnityEngine;
 using Photon.Realtime;
+using UnityEngine.UI;
+using TMPro;
 
 namespace Photon.Pun
 {
-    public class JoinManager : MonoBehaviourPunCallbacks
+    public class JoinManager : MonoBehaviourPunCallbacks, IConnectionCallbacks
     {
+        public TMP_InputField nameInput;
+        public TextMeshProUGUI text;
+        public TextMeshProUGUI buttonText;
+        public Button button;
+
         public string RoomScene = "Room";
-        bool isConnecting = false;
 
         private void Awake()
         {
-            isConnecting = false;
             PhotonNetwork.AutomaticallySyncScene = true;
         }
 
         public void Connect()
         {
-            isConnecting = true;
-
-            if (PhotonNetwork.IsConnected)
+            if (!PhotonNetwork.IsConnected)
             {
-                PhotonNetwork.JoinRandomRoom();
+                PhotonNetwork.GameVersion = "1";
+                text.text = "Connecting to photon...";
+                button.interactable = false;
+                PhotonNetwork.ConnectUsingSettings();
             }
             else 
             {
-                PhotonNetwork.GameVersion = "1";
-                PhotonNetwork.ConnectUsingSettings();
+                text.text = "Connecting to a random room...";
+                button.interactable = false;
+                PhotonNetwork.JoinRandomRoom();
             }
         }
 
         public override void OnConnected()
         {
-            Debug.LogError(PhotonNetwork.ServerAddress);
+            text.text = "Connected to Photon";
+            buttonText.text = "Join random Room";
+            button.interactable = true;
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
+            button.interactable = true;
+
             Debug.Log("OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
@@ -44,25 +55,22 @@ namespace Photon.Pun
 
         public override void OnDisconnected(DisconnectCause cause)
         {
+            button.interactable = true;
             Debug.LogError("Disconnected");
-
-            isConnecting = false;
         }
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room.\nFrom here on, your game would be running.");
+            PhotonNetwork.NickName = nameInput.text;
 
-            Debug.LogError(PhotonNetwork.CurrentRoom.Players);
-            Debug.LogError(PhotonNetwork.CurrentRoom.Name);
+
+            Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room.\nFrom here on, your game would be running.");
 
             // #Critical: We only load if we are the first player, else we rely on  PhotonNetwork.AutomaticallySyncScene to sync our instance scene.
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
-                Debug.Log("We load the 'Room for 1' ");
+                Debug.Log("We load the Room Scene");
 
-                // #Critical
-                // Load the Room Level. 
                 PhotonNetwork.LoadLevel(RoomScene);
             }
         }

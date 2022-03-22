@@ -1,5 +1,6 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCall
             playerType = PlayerType.PC;
             if (Application.platform == RuntimePlatform.Android) playerType = PlayerType.VR;
         }
+
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName);
     }
 
     void SpawnPlayer()
@@ -56,6 +59,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCall
         {
             SpawnPlayer();
         }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        PlayerList.Remove(otherPlayer.ActorNumber);
     }
 
     private void OnDestroy()
