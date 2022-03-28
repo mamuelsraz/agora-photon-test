@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7091772336979661042
+--- !u!1 &5745090527622463364
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7091772336979661043}
-  - component: {fileID: 7091772336979661040}
-  - component: {fileID: 4683986414261804890}
+  - component: {fileID: 5745090527622463367}
+  - component: {fileID: 5745090527622463366}
+  - component: {fileID: 8759042031808206179}
+  - component: {fileID: 578724996205540892}
   m_Layer: 0
-  m_Name: PlayerManager
+  m_Name: AgoraPhotonManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7091772336979661043
+--- !u!4 &5745090527622463367
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7091772336979661042}
+  m_GameObject: {fileID: 5745090527622463364}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,27 +33,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7091772336979661040
+--- !u!114 &5745090527622463366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7091772336979661042}
+  m_GameObject: {fileID: 5745090527622463364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00bdd9daedbda674a87c364b2750ebc5, type: 3}
+  m_Script: {fileID: 11500000, guid: fe3785409521b054a8c8be688a2e2b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  callID: 0
---- !u!114 &4683986414261804890
+  appID: 5376c522393140e4b6ffa89d37612ce3
+  syncedPlayers: 
+  OnPlayerSynced:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8759042031808206179
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7091772336979661042}
+  m_GameObject: {fileID: 5745090527622463364}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
@@ -68,3 +72,17 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &578724996205540892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5745090527622463364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889e12c2796e78e46b32cffb721ece0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agoraManager: {fileID: 5745090527622463366}
+  prefab: {fileID: 5821334063277684394, guid: 038903716fcfd284caf449ed0208f78a, type: 3}
