@@ -21,9 +21,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
             SpawnPlayer();
         }
     }
-
+    
     void SpawnPlayer()
     {
-        PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity, 0);
+        //the player will be conscious of its id thanks to this 
+        int id = PhotonNetwork.LocalPlayer.ActorNumber;
+        object[] IDdata = new object[]{(object)id};
+
+        PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity, 0, data: IDdata);
     }
 }

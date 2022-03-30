@@ -7,6 +7,8 @@ namespace Photon.Pun
 {
     public class JoinManager : MonoBehaviourPunCallbacks, IConnectionCallbacks
     {
+        //simple implementation of joining the client to a photon server
+
         public TMP_InputField nameInput;
         public TextMeshProUGUI text;
         public TextMeshProUGUI buttonText;

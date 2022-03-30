@@ -6,25 +6,66 @@ using Photon.Pun;
 
 public class VideoSurfaceSpawn : MonoBehaviourPunCallbacks
 {
+    //uses the OnPlayerSynced and OnPlayerUnSynced events to spawn videosurfaces
+
     public AgoraPhotonManager agoraManager;
     public GameObject prefab;
-    VideoSurface vid;
     Transform holder;
+
+    List<uint> indexes;
+    List<GameObject> surfaces;
 
     private void Start()
     {
-        agoraManager.OnPlayerSynced.AddListener(OnJoinedPlayer);
+        if (photonView.IsMine)
+        {
+            indexes = new List<uint>();
+            surfaces = new List<GameObject>();
+
+            agoraManager.OnPlayerSynced.AddListener(OnJoinedPlayer);
+            agoraManager.OnPlayerUnSynced.AddListener(OnLeftPlayer);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R) && photonView.IsMine)
+        {
+            AgoraPhotonManager.local.LeaveCall();
+        }
     }
 
     void OnJoinedPlayer(uint id)
     {
+        if (!photonView.IsMine) return;
+
         holder = GameObject.Find("holder").transform;
-        vid = Instantiate(prefab, holder).GetComponent<VideoSurface>();
+        VideoSurface vid = Instantiate(prefab, holder).GetComponent<VideoSurface>();
+        vid.gameObject.name = id.ToString();
 
         vid.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
-        //if (photonView.IsMine) vid.SetForUser(0);
-        //else
+        if ((uint)PhotonNetwork.LocalPlayer.ActorNumber == id)
+            vid.SetForUser(0);
+        else
             vid.SetForUser(id);
+
         vid.SetEnable(true);
+
+        surfaces.Add(vid.gameObject);
+        indexes.Add(id);
+    }
+
+    void OnLeftPlayer(uint id)
+    {
+        if (!photonView.IsMine) return;
+
+        if (indexes.Contains(id))
+        {
+            int index = indexes.IndexOf(id);
+            indexes.RemoveAt(index);
+
+            Destroy(surfaces[index]);
+            surfaces.RemoveAt(index);
+        }
     }
 }

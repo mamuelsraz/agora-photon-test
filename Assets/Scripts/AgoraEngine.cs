@@ -6,6 +6,7 @@ using agora_utilities;
 
 public class AgoraEngine
 {
+    //agora engine implementation
     public IRtcEngine mRtcEngine;
     private string token = "";
 
@@ -97,19 +98,6 @@ public class AgoraEngine
         {
             return;
         }
-
-        /*
-        if (string.IsNullOrEmpty(msg))
-        {
-            msg = string.Format("Error code:{0} msg:{1}", error, IRtcEngine.GetErrorDescription(error));
-        }
-
-        switch (error)
-        {
-            case 101:
-                msg += "\nPlease make sure your AppId is valid and it does not require a certificate for this demo.";
-                break;
-        }*/
 
         Debug.LogError(msg);
 

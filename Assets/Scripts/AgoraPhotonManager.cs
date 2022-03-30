@@ -5,8 +5,9 @@ using Photon.Pun;
 using agora_gaming_rtc;
 using UnityEngine.Events;
 
-public class AgoraPhotonManager : MonoBehaviourPunCallbacks
+public class AgoraPhotonManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    //the appID of your agora project. Get it here: https://console.agora.io/
     public string appID;
     [Space]
 
@@ -14,30 +15,31 @@ public class AgoraPhotonManager : MonoBehaviourPunCallbacks
     public static AgoraPhotonManager local;
     public List<uint> syncedPlayers = new List<uint>();
 
+    //player with id joins/leaves call
     [HideInInspector] public IdEvent OnPlayerSynced;
+    [HideInInspector] public IdEvent OnPlayerUnSynced;
 
+    //the photon actorNumber and agora uid
     uint id;
 
     private void Awake()
     {
-        id = (uint)PhotonNetwork.LocalPlayer.ActorNumber;
-
         if (photonView.IsMine)
         {
+            id = (uint)PhotonNetwork.LocalPlayer.ActorNumber;
             local = this;
             JoinCall(PhotonNetwork.CurrentRoom.Name, id);
         }
     }
 
-    private void Update()
+    //set the id of this player
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            LeaveCall();
-        }
+        object[] IDdata = info.photonView.InstantiationData;
+        id = (uint)(int)(IDdata[0]);
     }
 
-    private void LeaveCall()
+    public void LeaveCall()
     {
 
         if (!photonView.IsMine) return;
@@ -74,16 +76,17 @@ public class AgoraPhotonManager : MonoBehaviourPunCallbacks
         OnUserJoined(uid, elapsed);
     }
 
+    //add new player to syncedPlayers
     private void OnUserJoined(uint uid, int elapsed)
     {
         if (!photonView.IsMine) return;
 
-        Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
         syncedPlayers.Add(uid);
 
         OnPlayerSynced?.Invoke(uid);
     }
 
+    //remove player from syncedplayers
     private void OnUserLeft(uint uid, USER_OFFLINE_REASON reason)
     {
         if (!photonView.IsMine) return;
@@ -91,6 +94,8 @@ public class AgoraPhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("onUserLeft: uid = " + uid + " reason = " + reason);
 
         syncedPlayers.Remove(uid);
+
+        OnPlayerUnSynced?.Invoke(uid);
     }
 
     void OnApplicationQuit()

@@ -50,6 +50,9 @@ MonoBehaviour:
   OnPlayerSynced:
     m_PersistentCalls:
       m_Calls: []
+  OnPlayerUnSynced:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8759042031808206179
 MonoBehaviour:
   m_ObjectHideFlags: 0
